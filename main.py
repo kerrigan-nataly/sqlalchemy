@@ -1,4 +1,4 @@
-from flask import Flask
+from flask import Flask, render_template
 from data import db_session
 from data.users import User
 from data.jobs import Jobs
@@ -6,11 +6,7 @@ from data.jobs import Jobs
 app = Flask(__name__)
 app.config['SECRET_KEY'] = 'yandexlyceum_secret_key'
 
-
-def main():
-    db_session.global_init("db/mars_explorer.db")
-    session = db_session.create_session()
-
+def prep_db(session):
     cap = User()
     cap.surname = "Scott"
     cap.name = "Ridley"
@@ -47,10 +43,20 @@ def main():
     astro2.address = "module_2"
     astro2.email = "teddy_sanders@mars.org"
 
+    astro3 = User()
+    astro3.surname = "Sigourney"
+    astro3.name = "Weaver"
+    astro3.age = 30
+    astro3.position = "Secondary pilot"
+    astro3.speciality = "warrant officer"
+    astro3.address = "module_2"
+    astro3.email = "weaver_sigourney@mars.org"
+
     session.add(cap)
     session.add(nav)
     session.add(astro1)
     session.add(astro2)
+    session.add(astro3)
     session.commit()
 
     job = Jobs()
@@ -59,11 +65,48 @@ def main():
     job.work_size = 15
     job.collaborators = '2, 3'
     job.is_finished = False
+
+    exploration = Jobs()
+    exploration.team_leader = astro1.id
+    exploration.job = 'Exploration of mineral resources'
+    exploration.work_size = 15
+    exploration.collaborators = '4, 3'
+    exploration.is_finished = False
+
+    development = Jobs()
+    development.team_leader = astro2.id
+    development.job = 'Development of a managment system'
+    development.work_size = 25
+    development.collaborators = '5'
+    development.is_finished = False
+
     session.add(job)
+    session.add(exploration)
+    session.add(development)
 
     session.commit()
 
-    # app.run()
+
+@app.route('/')
+@app.route('/jobs')
+def index():
+    session = db_session.create_session()
+    jobs = session.query(Jobs).all()
+    return render_template('index.html', jobs=jobs)
+
+
+def main():
+    db_session.global_init("db/mars_explorer.db")
+    session = db_session.create_session()
+
+    users = session.query(User).all()
+    if not users:
+        prep_db(session)
+
+    # for user in session.query(User).filter(User.address.like("module_2"), User.speciality.notilike("%tourist%"), \
+    #                                        User.position.notilike("%navigator%")):
+    #     print(user.id)
+    app.run()
 
 
 if __name__ == '__main__':
