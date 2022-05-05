@@ -2,6 +2,7 @@ from flask import Flask, render_template
 from data import db_session
 from data.users import User
 from data.jobs import Jobs
+from sqlalchemy import func
 
 app = Flask(__name__)
 app.config['SECRET_KEY'] = 'yandexlyceum_secret_key'
@@ -71,7 +72,7 @@ def prep_db(session):
     exploration.job = 'Exploration of mineral resources'
     exploration.work_size = 15
     exploration.collaborators = '4, 3'
-    exploration.is_finished = False
+    exploration.is_finished = True
 
     development = Jobs()
     development.team_leader = astro2.id
@@ -95,6 +96,32 @@ def index():
     return render_template('index.html', jobs=jobs)
 
 
+@app.route('/register')
+def register():
+    return render_template('register.html')
+
+
+def team_leaders():
+    session = db_session.create_session()
+    jobs_collaborators = {}
+    for job in session.query(Jobs).all():
+        try:
+            jobs_collaborators[len(job.collaborators)].append(job.id)
+        except KeyError:
+            jobs_collaborators[len(job.collaborators)] = [job.id]
+    ids = list(jobs_collaborators[sorted(jobs_collaborators, reverse=True)[0]])
+    for job in session.query(Jobs).filter(Jobs.id.in_(ids)):
+        responsible = session.query(User).filter(User.id == job.team_leader).first()
+        print(responsible.name, responsible.surname, sep=" ")
+
+
+def update_task():
+    session = db_session.create_session()
+    users = session.query(User).filter(User.address.like("%2%"), User.age < 45)
+    users.update({User.address: "module_3"}, synchronize_session=False)
+    session.commit()
+
+
 def main():
     db_session.global_init("db/mars_explorer.db")
     session = db_session.create_session()
@@ -103,9 +130,9 @@ def main():
     if not users:
         prep_db(session)
 
-    # for user in session.query(User).filter(User.address.like("module_2"), User.speciality.notilike("%tourist%"), \
-    #                                        User.position.notilike("%navigator%")):
-    #     print(user.id)
+    # team_leaders()
+    # update_task()
+
     app.run()
 
 

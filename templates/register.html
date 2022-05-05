@@ -1,0 +1,59 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<div class="row justify-content-center">
+    <div class="col-6">
+
+        <h2>Register form</h2>
+        <form action="" method="post" novalidate>
+            <p>
+                <label for="astronaut-login">login / email</label>
+                <input class="form-control" type="text" id="astronaut-login">
+            </p>
+
+            <p>
+                <label for="astronaut-pwd">Password</label>
+                <input class="form-control" type="password" id="astronaut-pwd">
+            </p>
+
+            <p>
+                <label for="astronaut-pwd-rpt">Repeat password</label>
+                <input class="form-control" type="password" id="astronaut-pwd-rpt">
+            </p>
+
+            <p>
+                <label for="astronaut-surname">Surname</label>
+                <input class="form-control" type="text" id="astronaut-surname">
+            </p>
+
+            <p>
+                <label for="astronaut-name">Name</label>
+                <input class="form-control" type="text" id="astronaut-name">
+            </p>
+
+            <p>
+                <label for="astronaut-age">Age</label>
+                <input class="form-control" type="text" id="astronaut-age">
+            </p>
+
+            <p>
+                <label for="astronaut-position">Position</label>
+                <input class="form-control" type="text" id="astronaut-position">
+            </p>
+
+            <p>
+                <label for="astronaut-speciality">Speciality</label>
+                <input class="form-control" type="text" id="astronaut-speciality">
+            </p>
+
+            <p>
+                <label for="astronaut-address">Address</label>
+                <input class="form-control" type="text" id="astronaut-address">
+            </p>
+
+
+            <p><input type="submit" class="btn btn-primary" value="Submit"></p>
+        </form>
+    </div>
+</div>
+{% endblock %}
