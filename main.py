@@ -11,25 +11,6 @@ def main():
     db_session.global_init("db/mars_explorer.db")
     session = db_session.create_session()
 
-    # user = User()
-    # user.surname = "Scott"
-    # user.name = "Ridley"
-    # user.age = 21
-    # user.position = "captain"
-    # user.speciality = "research engineer"
-    # user.address = "module_1"
-    # user.email = "scott_chief@mars.org"
-    # user.hashed_password = "cap"
-    # session.add(user)
-
-    # job = Jobs()
-    # job.team_leader = 1
-    # job.job = 'deployment of residential modules 1 and 2'
-    # job.work_size = 15
-    # job.collaborators = '2, 3'
-    # job.is_finished = False
-    # session.add(job)
-
     cap = User()
     cap.surname = "Scott"
     cap.name = "Ridley"
@@ -70,6 +51,15 @@ def main():
     session.add(nav)
     session.add(astro1)
     session.add(astro2)
+    session.commit()
+
+    job = Jobs()
+    job.team_leader = cap.id
+    job.job = 'deployment of residential modules 1 and 2'
+    job.work_size = 15
+    job.collaborators = '2, 3'
+    job.is_finished = False
+    session.add(job)
 
     session.commit()
 
